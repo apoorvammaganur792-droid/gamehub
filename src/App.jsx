@@ -1,121 +1,152 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
+import DarkShooter from './games/DarkShooter/DarkShooter'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [showShooter, setShowShooter] = useState(false)
+
+  if (showShooter) {
+    return (
+      <DarkShooter onExit={() => setShowShooter(false)} />
+    )
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app">
+      <header className="header">
+        <div className="logo">
+          GAME<span>HUB</span>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+
+        <nav className="nav">
+          <a href="#home">Home</a>
+          <a href="#games">Games</a>
+          <a href="#about">About</a>
+        </nav>
+
+        <button className="menu-button" type="button">
+          ☰
         </button>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
+      <main>
+        <section className="hero-section" id="home">
+          <div className="hero-content">
+            <p className="hero-label">WELCOME TO GAMEHUB</p>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+            <h1>
+              PLAY.
+              <br />
+              <span>HAVE FUN.</span>
+            </h1>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+            <p className="hero-text">
+              Discover fun browser games built for both desktop and mobile.
+            </p>
+
+            <a href="#games" className="play-button">
+              EXPLORE GAMES
+            </a>
+          </div>
+        </section>
+
+        <section className="games-section" id="games">
+          <div className="section-heading">
+            <p>CHOOSE YOUR GAME</p>
+            <h2>Featured Games</h2>
+          </div>
+
+          <div className="games-grid">
+
+            {/* Snake */}
+            <article className="game-card">
+              <div className="game-icon">🐍</div>
+
+              <div className="game-info">
+                <span>ARCADE</span>
+
+                <h3>Snake</h3>
+
+                <p>
+                  Classic snake game with mobile controls.
+                </p>
+
+                <button type="button">
+                  COMING SOON →
+                </button>
+              </div>
+            </article>
+
+            {/* Tetris */}
+            <article className="game-card">
+              <div className="game-icon">🧱</div>
+
+              <div className="game-info">
+                <span>PUZZLE</span>
+
+                <h3>Tetris</h3>
+
+                <p>
+                  Arrange the blocks and beat your high score.
+                </p>
+
+                <button type="button">
+                  COMING SOON
+                </button>
+              </div>
+            </article>
+
+            {/* Dark Shooter */}
+            <article className="game-card">
+              <div className="game-icon">🔫</div>
+
+              <div className="game-info">
+                <span>ACTION</span>
+
+                <h3>Dark Shooter</h3>
+
+                <p>
+                  Enter the darkness. Hunt your targets.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => setShowShooter(true)}
+                >
+                  PLAY NOW →
+                </button>
+              </div>
+            </article>
+
+            {/* Memory */}
+            <article className="game-card">
+              <div className="game-icon">🧠</div>
+
+              <div className="game-info">
+                <span>PUZZLE</span>
+
+                <h3>Memory</h3>
+
+                <p>
+                  Test your memory and find matching cards.
+                </p>
+
+                <button type="button">
+                  COMING SOON
+                </button>
+              </div>
+            </article>
+
+          </div>
+        </section>
+      </main>
+
+      <footer id="about">
+        <p>
+          © 2026 GameHub · Built with React
+        </p>
+      </footer>
+    </div>
   )
 }
 

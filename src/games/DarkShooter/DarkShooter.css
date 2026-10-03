@@ -1,0 +1,1691 @@
+/* Main game */
+
+.dark-shooter {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 50% 40%,
+    #24152f 0%,
+    #110d18 35%,
+    #050509 75%,
+    #020203 100%
+  );
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: none;
+}
+.dark-shooter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 25%,
+    rgba(0, 0, 0, 0.55) 75%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+.dark-shooter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px
+    );
+  background-size: 60px 60px;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Fog */
+.fog {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fog-one {
+  top: 15%;
+  left: 10%;
+  background: #702a91;
+}
+.fog-two {
+  right: 5%;
+  bottom: 10%;
+  background: #401060;
+}
+/* HUD */
+.game-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 45px;
+  z-index: 20;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55),
+    transparent
+  );
+}
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+.game-logo {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+.game-logo span {
+  color: #b638ff;
+}
+.mission {
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #9b9b9b;
+}
+
+.hud-right {
+  display: flex;
+  gap: 40px;
+  text-align: right;
+}
+.score,
+.ammo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #777;
+}
+.score strong,
+.ammo strong {
+  color: white;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+.ammo strong {
+  color: #ff3d67;
+  text-shadow: 0 0 10px rgba(255, 61, 103, 0.35);
+}
+.ammo small {
+  font-size: 11px;
+  color: #666;
+}
+
+/* Mission title */
+
+.mission-title {
+  position: absolute;
+  top: 150px;
+  left: 50px;
+  z-index: 10;
+}
+
+.mission-title span {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #ff3d67;
+}
+
+.mission-title h1 {
+  margin: 10px 0;
+  font-size: clamp(32px, 4vw, 60px);
+  line-height: 0.92;
+  letter-spacing: -2px;
+  font-weight: 900;
+}
+
+.mission-title p {
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #666;
+}
+
+.mission-goal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #666;
+}
+
+.mission-goal strong {
+  color: #ff315f;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(255, 49, 95, 0.5);
+}
+
+/* Enemy health */
+
+.enemy-health-container {
+  position: absolute;
+  top: 145px;
+  right: 50px;
+  width: 230px;
+  z-index: 20;
+}
+
+.enemy-name {
+  margin-bottom: 8px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-align: right;
+  color: #aaa;
+}
+
+.health-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.health-fill {
+  height: 100%;
+  background: #ff315f;
+  box-shadow: 0 0 15px rgba(255, 49, 95, 0.7);
+  transition: width 0.25s ease;
+}
+
+.health-text {
+  margin-top: 6px;
+  text-align: right;
+  font-size: 9px;
+  color: #666;
+}
+   /*Anime Enemy*/
+   
+.dark-enemy {
+  position: absolute;
+  width: 260px;
+  height: 390px;
+  transform: translate(-50%, -50%) scale(0.72);
+  transform-origin: center center;
+  z-index: 12;
+
+  transition:
+    left 0.75s ease-in-out,
+    top 0.75s ease-in-out,
+    filter 0.1s;
+
+  will-change: left, top, transform, filter;
+
+  animation: enemyPopIn 0.65s cubic-bezier(
+    0.16,
+    1,
+    0.3,
+    1
+  );
+}
+
+/* Anime enemy pop-up entrance */
+
+@keyframes enemyPopIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+    filter: blur(12px) brightness(0.4);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.82);
+    filter: blur(2px) brightness(1.3);
+  }
+
+  55% {
+    transform: translate(-50%, -50%) scale(0.67);
+    filter: blur(0) brightness(1);
+  }
+
+  75% {
+    transform: translate(-50%, -50%) scale(0.75);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.72);
+    filter: blur(0) brightness(1);
+  }
+}
+
+/* Pop-up glow */
+
+.dark-enemy::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 310px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+
+  background: radial-gradient(
+    ellipse,
+    rgba(190, 25, 255, 0.18) 0%,
+    rgba(255, 49, 95, 0.08) 35%,
+    transparent 72%
+  );
+
+  filter: blur(25px);
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: -1;
+
+  animation: enemyEnergyPulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes enemyEnergyPulse {
+  from {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.45;
+  }
+
+  to {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 0.95;
+  }
+}
+
+.dark-enemy.enemy-hit {
+  filter:
+    brightness(2.2)
+    saturate(1.4)
+    drop-shadow(0 0 35px #ff174f);
+
+  transform: translate(-50%, -50%) scale(0.78);
+}
+
+.enemy-pop-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 190px;
+  height: 45px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.9);
+  filter: blur(14px);
+  z-index: 0;
+}
+
+.enemy-aura {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 300px;
+  height: 380px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(190, 25, 255, 0.3) 0%,
+      rgba(100, 15, 130, 0.18) 35%,
+      transparent 72%
+    );
+
+  filter: blur(18px);
+  animation: auraPulse 2s infinite alternate;
+  z-index: 0;
+}
+
+@keyframes auraPulse {
+  from {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+
+  to {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+/* Actual anime character */
+
+.enemy-character {
+  position: absolute;
+  left: 50%;
+  bottom: 15px;
+  width: 230px;
+  height: 365px;
+  transform: translateX(-50%) scale(0.82);
+  transform-origin: bottom center;
+  filter:
+    drop-shadow(0 20px 25px rgba(0, 0, 0, 0.95))
+    drop-shadow(0 0 18px rgba(255, 25, 55, 0.45))
+    drop-shadow(0 0 45px rgba(255, 25, 55, 0.22));
+  z-index: 5;
+  animation: enemyFloat 3s ease-in-out infinite;
+}
+
+@keyframes enemyFloat {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) scale(0.82);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-7px) scale(0.82);
+  }
+}
+
+/* Back hair */
+
+.enemy-back-hair {
+  position: absolute;
+  left: 50%;
+  top: 35px;
+  width: 155px;
+  height: 155px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    135deg,
+    #030305,
+    #160d1c 45%,
+    #050507
+  );
+  clip-path: polygon(
+    20% 0,
+    42% 12%,
+    55% 0,
+    70% 15%,
+    92% 4%,
+    84% 42%,
+    100% 58%,
+    76% 60%,
+    88% 100%,
+    57% 76%,
+    50% 100%,
+    38% 76%,
+    10% 100%,
+    20% 65%,
+    0 70%,
+    17% 45%
+  );
+  filter:
+    drop-shadow(0 0 10px rgba(255, 25, 55, 0.55))
+    drop-shadow(0 0 22px rgba(255, 25, 55, 0.25));
+}
+
+/* Head */
+
+.enemy-head {
+  position: absolute;
+  left: 50%;
+  top: 38px;
+  width: 125px;
+  height: 145px;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.enemy-hair {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  width: 145px;
+  height: 105px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(
+      135deg,
+      #030304,
+      #1b1122 48%,
+      #050507
+    );
+  clip-path: polygon(
+    3% 30%,
+    20% 12%,
+    32% 27%,
+    48% 0,
+    60% 23%,
+    76% 5%,
+    98% 28%,
+    84% 48%,
+    100% 65%,
+    73% 59%,
+    66% 100%,
+    50% 62%,
+    35% 100%,
+    29% 60%,
+    0 70%,
+    18% 48%
+  );
+  filter:
+    drop-shadow(0 0 10px rgba(255, 25, 55, 0.65))
+    drop-shadow(0 0 20px rgba(255, 25, 55, 0.25));
+}
+
+.enemy-hair span {
+  position: absolute;
+  display: block;
+  width: 3px;
+  height: 45px;
+  background: #ff315f;
+  opacity: 0.75;
+  box-shadow: 0 0 8px #ff315f;
+}
+
+.enemy-hair span:nth-child(1) {
+  left: 32%;
+  top: 25px;
+  transform: rotate(-18deg);
+}
+
+.enemy-hair span:nth-child(2) {
+  left: 51%;
+  top: 12px;
+  transform: rotate(5deg);
+}
+
+.enemy-hair span:nth-child(3) {
+  right: 25%;
+  top: 28px;
+  transform: rotate(20deg);
+}
+
+/* Face */
+
+.enemy-face {
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  width: 100px;
+  height: 120px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(
+      145deg,
+      #302936 0%,
+      #17131b 45%,
+      #08070a 100%
+    );
+  clip-path: polygon(
+    17% 0,
+    83% 0,
+    100% 25%,
+    88% 73%,
+    68% 100%,
+    50% 91%,
+    32% 100%,
+    12% 73%,
+    0 25%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 0 25px rgba(255, 255, 255, 0.04),
+    inset 0 -10px 20px rgba(255, 20, 50, 0.08),
+    0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.enemy-brow {
+  position: absolute;
+  top: 42px;
+  width: 28px;
+  height: 4px;
+  background: #08070a;
+  box-shadow: 0 0 5px rgba(255, 25, 55, 0.35);
+}
+
+.enemy-brow-left {
+  left: 14px;
+  transform: rotate(12deg);
+}
+
+.enemy-brow-right {
+  right: 14px;
+  transform: rotate(-12deg);
+}
+
+/* RED VILLAIN EYES */
+
+.eye {
+  position: absolute;
+  top: 51px;
+  width: 27px;
+  height: 9px;
+  background: #ff174f;
+  box-shadow:
+    0 0 8px #ff174f,
+    0 0 20px #ff174f,
+    0 0 40px rgba(255, 23, 79, 0.8);
+  clip-path: polygon(
+    0 45%,
+    50% 0,
+    100% 45%,
+    50% 100%
+  );
+  animation: eyeGlow 1.2s infinite alternate;
+}
+
+.eye-left {
+  left: 12px;
+  transform: rotate(-4deg);
+}
+
+.eye-right {
+  right: 12px;
+  transform: rotate(4deg);
+}
+
+.eye span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes eyeGlow {
+  from {
+    filter: brightness(0.8);
+  }
+
+  to {
+    filter: brightness(1.8);
+  }
+}
+
+/* Nose */
+
+.enemy-nose {
+  position: absolute;
+  left: 50%;
+  top: 62px;
+  width: 2px;
+  height: 27px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+}
+
+/* Mask */
+
+.enemy-mask {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  width: 65px;
+  height: 32px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(
+      180deg,
+      #050507,
+      #111016
+    );
+  clip-path: polygon(
+    0 15%,
+    25% 0,
+    50% 20%,
+    75% 0,
+    100% 15%,
+    88% 100%,
+    50% 72%,
+    12% 100%
+  );
+  border-top: 1px solid rgba(255, 30, 60, 0.65);
+  box-shadow: 0 -5px 15px rgba(255, 20, 50, 0.12);
+}
+
+.enemy-mask span {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  width: 28px;
+  height: 2px;
+  transform: translateX(-50%);
+  background: #ff174f;
+  box-shadow:
+    0 0 8px #ff174f,
+    0 0 18px rgba(255, 23, 79, 0.8);
+}
+
+/* Neck */
+
+.enemy-neck {
+  position: absolute;
+  left: 50%;
+  top: 160px;
+  width: 40px;
+  height: 45px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    #09080c,
+    #29222c,
+    #08070a
+  );
+  z-index: 2;
+}
+
+/* Body */
+
+.enemy-body {
+  position: absolute;
+  left: 50%;
+  top: 175px;
+  width: 230px;
+  height: 190px;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.enemy-coat {
+  position: absolute;
+  left: 50%;
+  top: 5px;
+  width: 150px;
+  height: 185px;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(
+      90deg,
+      #050507 0%,
+      #18131d 40%,
+      #29202f 50%,
+      #100d14 65%,
+      #040406 100%
+    );
+  clip-path: polygon(
+    28% 0,
+    72% 0,
+    88% 18%,
+    100% 100%,
+    0 100%,
+    12% 18%
+  );
+  box-shadow:
+    inset 0 0 25px rgba(255, 255, 255, 0.04),
+    inset 0 0 25px rgba(255, 20, 50, 0.08),
+    0 15px 25px rgba(0, 0, 0, 0.9);
+}
+
+.coat-collar {
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 80px;
+  background: linear-gradient(
+    135deg,
+    #302539,
+    #09080c
+  );
+}
+
+.coat-collar.left {
+  left: 25px;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    65% 100%
+  );
+  border-left: 2px solid rgba(255, 25, 55, 0.55);
+}
+
+.coat-collar.right {
+  right: 25px;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    35% 100%
+  );
+  border-right: 2px solid rgba(255, 25, 55, 0.55);
+}
+
+.coat-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    #ff174f,
+    rgba(255, 23, 79, 0.08)
+  );
+  box-shadow:
+    0 0 8px #ff174f,
+    0 0 18px rgba(255, 23, 79, 0.5);
+}
+
+.coat-symbol {
+  position: absolute;
+  left: 50%;
+  top: 75px;
+  transform: translateX(-50%);
+  color: #ff174f;
+  font-size: 16px;
+  text-shadow:
+    0 0 8px #ff174f,
+    0 0 20px rgba(255, 23, 79, 0.8);
+}
+
+.enemy-shoulder {
+  position: absolute;
+  top: 12px;
+  width: 70px;
+  height: 105px;
+  background:
+    linear-gradient(
+      135deg,
+      #08070a,
+      #29202f 55%,
+      #09080b
+    );
+  border-radius: 35px;
+  box-shadow:
+    inset 0 0 15px rgba(255, 255, 255, 0.03),
+    0 10px 20px rgba(0, 0, 0, 0.8);
+}
+
+.enemy-shoulder.left {
+  left: -8px;
+  transform: rotate(22deg);
+  border-left: 2px solid rgba(255, 25, 55, 0.35);
+}
+
+.enemy-shoulder.right {
+  right: -8px;
+  transform: rotate(-22deg);
+  border-right: 2px solid rgba(255, 25, 55, 0.35);
+}
+
+.enemy-arm {
+  position: absolute;
+  top: 55px;
+  width: 42px;
+  height: 110px;
+  background: linear-gradient(
+    90deg,
+    #07070a,
+    #211924,
+    #07070a
+  );
+  border-radius: 20px;
+}
+.enemy-arm-left {
+  left: 10px;
+  transform: rotate(20deg);
+}
+
+.enemy-arm-right {
+  right: 10px;
+  transform: rotate(-20deg);
+}
+
+/* Red Ground Aura */
+
+.enemy-ground-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 210px;
+  height: 35px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 23, 79, 0.75),
+      rgba(255, 23, 79, 0.3) 35%,
+      transparent 72%
+    );
+  filter: blur(12px);
+  box-shadow:
+    0 0 35px rgba(255, 23, 79, 0.45);
+}
+
+/* Hit and miss */
+
+.game-message {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translateX(-50%);
+  z-index: 60;
+
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  white-space: nowrap;
+
+  pointer-events: none;
+
+  animation: shotMessage 0.7s ease-out forwards;
+}
+
+.game-message.hit {
+  color: #fff;
+
+  text-shadow:
+    0 0 10px #ff315f,
+    0 0 25px #ff315f;
+}
+
+.game-message.miss {
+  color: #ff647f;
+  text-shadow: 0 0 10px #ff315f;
+}
+
+.game-message.success {
+  color: #fff;
+  font-size: 25px;
+
+  text-shadow:
+    0 0 15px #700B97,
+    0 0 35px #b638ff;
+}
+
+.game-message.failed {
+  color: #ff315f;
+  font-size: 25px;
+
+  text-shadow:
+    0 0 15px #ff315f,
+    0 0 35px #ff315f;
+}
+
+@keyframes shotMessage {
+  0% {
+    opacity: 0;
+    transform:
+      translateX(-50%)
+      translateY(15px)
+      scale(0.8);
+  }
+
+  20% {
+    opacity: 1;
+    transform:
+      translateX(-50%)
+      translateY(0)
+      scale(1.05);
+  }
+
+  70% {
+    opacity: 1;
+    transform:
+      translateX(-50%)
+      translateY(-5px)
+      scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translateX(-50%)
+      translateY(-25px)
+      scale(0.95);
+  }
+}
+
+/* Crosshair */
+
+.crosshair {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  pointer-events: none;
+}
+
+.crosshair-circle {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+}
+
+.crosshair-horizontal {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-50%);
+}
+
+.crosshair-vertical {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateX(-50%);
+}
+
+.crosshair-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ff315f;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px #ff315f;
+}
+
+/* Weapon */
+
+.weapon {
+  position: absolute;
+  left: 50%;
+  bottom: -35px;
+  width: 105px;
+  height: 315px;
+
+  transform:
+    translateX(-50%)
+    rotate(var(--weapon-angle));
+
+  transform-origin: 50% 88%;
+  z-index: 30;
+  pointer-events: none;
+  transition: transform 0.04s linear;
+}
+
+.weapon-recoil {
+  animation: recoil 0.1s ease-out;
+}
+
+@keyframes recoil {
+  0% {
+    margin-top: 0;
+  }
+
+  35% {
+    margin-top: 12px;
+  }
+
+  100% {
+    margin-top: 0;
+  }
+}
+
+.gun {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 70px;
+  height: 285px;
+  transform: translateX(-50%);
+}
+
+/* Barrel */
+
+.gun-barrel {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 20px;
+  height: 125px;
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      90deg,
+      #08080b,
+      #303039 30%,
+      #121217 65%,
+      #050507
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px 5px 2px 2px;
+
+  box-shadow:
+    inset 0 0 10px rgba(255, 255, 255, 0.04),
+    0 0 15px rgba(0, 0, 0, 0.8);
+
+  z-index: 3;
+}
+
+.barrel-inner {
+  position: absolute;
+  left: 50%;
+  top: 7px;
+  width: 7px;
+  height: 105px;
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      90deg,
+      #020203,
+      #111117,
+      #020203
+    );
+
+  border-radius: 4px;
+}
+
+/* Gun body */
+
+.gun-body {
+  position: absolute;
+  left: 50%;
+  top: 105px;
+  width: 62px;
+  height: 72px;
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      135deg,
+      #111116,
+      #29262d 45%,
+      #08080b
+    );
+
+  border-radius: 12px 12px 7px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  box-shadow:
+    0 12px 25px rgba(0, 0, 0, 0.7);
+}
+
+.gun-detail {
+  position: absolute;
+  left: 10px;
+  top: 16px;
+  width: 40px;
+  height: 3px;
+  background: #49434d;
+  border-radius: 4px;
+}
+
+.gun-light {
+  position: absolute;
+  right: 9px;
+  top: 25px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ff315f;
+  box-shadow: 0 0 8px #ff315f;
+}
+
+/* Grip */
+
+.gun-grip {
+  position: absolute;
+  left: 50%;
+  top: 165px;
+  width: 32px;
+  height: 105px;
+
+  transform:
+    translateX(-50%)
+    rotate(5deg);
+
+  background:
+    linear-gradient(
+      90deg,
+      #08080b,
+      #252129,
+      #09090c
+    );
+
+  border-radius: 4px 4px 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    inset 0 0 12px rgba(0, 0, 0, 0.8);
+}
+
+.grip-line {
+  position: relative;
+  width: 18px;
+  height: 2px;
+  margin: 18px auto 0;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Trigger */
+
+.gun-trigger {
+  position: absolute;
+  left: 50%;
+  top: 165px;
+  width: 15px;
+  height: 22px;
+  transform: translateX(-50%);
+
+  border: 2px solid #070709;
+  border-radius: 0 0 7px 7px;
+}
+
+/* Muzzle flash */
+
+.muzzle-flash {
+  position: absolute;
+  left: 50%;
+  top: -35px;
+  width: 65px;
+  height: 65px;
+  transform: translateX(-50%);
+  z-index: 20;
+
+  filter: drop-shadow(0 0 12px #ff6b32);
+}
+
+.muzzle-flash::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+
+  background:
+    radial-gradient(
+      circle,
+      #fff 0%,
+      #ffd43b 20%,
+      #ff642e 45%,
+      transparent 70%
+    );
+
+  clip-path: polygon(
+    50% 0,
+    62% 35%,
+    100% 25%,
+    70% 55%,
+    90% 100%,
+    50% 70%,
+    15% 100%,
+    30% 55%,
+    0 25%,
+    40% 35%
+  );
+}
+
+.muzzle-flash span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 40px;
+  background: #ffb52e;
+  transform-origin: center bottom;
+}
+
+.muzzle-flash span:nth-child(1) {
+  transform:
+    translate(-50%, -50%)
+    rotate(0deg);
+}
+
+.muzzle-flash span:nth-child(2) {
+  transform:
+    translate(-50%, -50%)
+    rotate(90deg);
+}
+
+.muzzle-flash span:nth-child(3) {
+  transform:
+    translate(-50%, -50%)
+    rotate(45deg);
+}
+/* Bullet */
+.bullet {
+  position: absolute;
+  height: 3px;
+  transform-origin: left center;
+
+  background:
+    linear-gradient(
+      90deg,
+      #fff,
+      #ff4b70,
+      transparent
+    );
+
+  box-shadow:
+    0 0 8px #ff315f,
+    0 0 18px rgba(255, 49, 95, 0.7);
+
+  z-index: 25;
+  pointer-events: none;
+
+  animation: bulletFade 0.18s linear forwards;
+}
+
+@keyframes bulletFade {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Round result screen */
+
+.defeated-screen {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: min(90%, 600px);
+  transform: translate(-50%, -50%);
+  z-index: 80;
+
+  text-align: center;
+  padding: 50px 30px;
+
+  background: rgba(3, 3, 8, 0.72);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 0 80px rgba(0, 0, 0, 0.8);
+
+  backdrop-filter: blur(10px);
+
+  animation: missionAppear 0.45s ease-out;
+}
+
+@keyframes missionAppear {
+  from {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+  }
+}
+
+.defeated-text {
+  font-size: clamp(26px, 4vw, 45px);
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: white;
+}
+
+.defeated-text.success {
+  text-shadow:
+    0 0 20px #b638ff,
+    0 0 50px rgba(182, 56, 255, 0.6);
+}
+
+.defeated-text.failed {
+  color: #ff315f;
+
+  text-shadow:
+    0 0 20px #ff315f,
+    0 0 50px rgba(255, 49, 95, 0.6);
+}
+
+.defeated-score {
+  margin-top: 18px;
+  font-size: 22px;
+  color: #fff;
+  letter-spacing: 4px;
+}
+
+.failed-info {
+  margin-top: 12px;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #777;
+}
+
+/* Result buttons */
+
+.final-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.restart-button,
+.exit-button {
+  min-width: 145px;
+  padding: 13px 25px;
+
+  border: 1px solid #ff315f;
+  background: rgba(255, 49, 95, 0.08);
+
+  color: white;
+
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 3px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.restart-button:hover {
+  background: #ff315f;
+
+  box-shadow:
+    0 0 25px rgba(255, 49, 95, 0.5);
+
+  transform: translateY(-2px);
+}
+
+.exit-button {
+  border-color: #b638ff;
+  background: rgba(182, 56, 255, 0.08);
+}
+
+.exit-button:hover {
+  background: #b638ff;
+
+  box-shadow:
+    0 0 25px rgba(182, 56, 255, 0.5);
+
+  transform: translateY(-2px);
+}
+
+/* Controls */
+
+.controls {
+  position: absolute;
+  left: 50%;
+  bottom: 25px;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 30px;
+
+  z-index: 40;
+
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #666;
+
+  white-space: nowrap;
+}
+
+.controls b {
+  color: #aaa;
+}
+
+/* Vignette */
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+
+  box-shadow:
+    inset 0 0 180px rgba(0, 0, 0, 0.9);
+}
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .game-hud {
+    height: 70px;
+    padding: 0 20px;
+  }
+
+  .game-logo {
+    font-size: 17px;
+  }
+
+  .mission {
+    display: none;
+  }
+
+  .hud-right {
+    gap: 20px;
+  }
+
+  .mission-title {
+    top: 105px;
+    left: 20px;
+  }
+
+  .mission-title h1 {
+    font-size: 32px;
+  }
+
+  .mission-goal {
+    margin-top: 12px;
+  }
+
+  .enemy-health-container {
+    top: 105px;
+    right: 20px;
+    width: 150px;
+  }
+
+  /* Smaller enemy container on tablet/mobile */
+
+  .dark-enemy {
+    width: 220px;
+    height: 330px;
+
+    transform:
+      translate(-50%, -50%)
+      scale(0.65);
+  }
+
+  /* Smaller anime character */
+
+  .enemy-character {
+    width: 230px;
+    height: 365px;
+    bottom: 15px;
+
+    transform:
+      translateX(-50%)
+      scale(1);
+  }
+
+  .dark-enemy.enemy-hit {
+    transform:
+      translate(-50%, -50%)
+      scale(0.7);
+  }
+
+  .weapon {
+    width: 90px;
+    height: 280px;
+    bottom: -35px;
+  }
+
+  .gun {
+    transform:
+      translateX(-50%)
+      scale(0.88);
+
+    transform-origin: bottom center;
+  }
+
+  .game-message {
+    top: 68%;
+    font-size: 14px;
+    letter-spacing: 3px;
+  }
+
+  .defeated-screen {
+    padding: 35px 20px;
+  }
+
+  .defeated-text {
+    letter-spacing: 4px;
+  }
+
+  .final-buttons {
+    gap: 10px;
+  }
+
+  .restart-button,
+  .exit-button {
+    min-width: 120px;
+    padding: 12px 15px;
+  }
+
+  .controls {
+    bottom: 12px;
+    gap: 12px;
+    font-size: 7px;
+  }
+}
+
+/* =========================================================
+   Small Mobile
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .mission-title {
+    top: 95px;
+  }
+
+  .mission-title h1 {
+    font-size: 25px;
+  }
+
+  .mission-title p {
+    display: none;
+  }
+
+  .mission-goal {
+    font-size: 8px;
+  }
+
+  .enemy-health-container {
+    width: 120px;
+  }
+
+  .dark-enemy {
+    width: 200px;
+    height: 300px;
+
+    transform:
+      translate(-50%, -50%)
+      scale(0.58);
+  }
+
+  .enemy-character {
+    width: 230px;
+    height: 365px;
+    bottom: 10px;
+
+    transform:
+      translateX(-50%)
+      scale(0.85);
+
+    transform-origin: bottom center;
+  }
+
+  .dark-enemy.enemy-hit {
+    transform:
+      translate(-50%, -50%)
+      scale(0.63);
+  }
+
+  .hud-right .score {
+    display: none;
+  }
+
+  .weapon {
+    bottom: -55px;
+  }
+
+  .game-message {
+    top: 67%;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .controls {
+    gap: 8px;
+  }
+
+  .defeated-screen {
+    width: 88%;
+    padding: 30px 15px;
+  }
+
+  .final-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .restart-button,
+  .exit-button {
+    width: 180px;
+  }
+}
+.game-exit-button {
+  margin-left: 18px;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 49, 95, 0.7);
+  background: rgba(255, 49, 95, 0.08);
+  color: #ff315f;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.game-exit-button:hover {
+  background: #ff315f;
+  color: white;
+  box-shadow: 0 0 18px rgba(255, 49, 95, 0.5);
+}
