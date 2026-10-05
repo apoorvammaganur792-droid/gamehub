@@ -1,14 +1,27 @@
 import { useState } from 'react'
 import './App.css'
 import DarkShooter from './games/DarkShooter/DarkShooter'
+import Snake from './games/Snake/Snake'
+import Tetris from './games/Tetris/Tetris'
 
 function App() {
-  const [showShooter, setShowShooter] = useState(false)
+  const [activeGame, setActiveGame] = useState(null)
 
-  if (showShooter) {
+  if (activeGame === 'shooter') {
     return (
-      <DarkShooter onExit={() => setShowShooter(false)} />
+      <DarkShooter onExit={() => setActiveGame(null)} />
     )
+  }
+
+  if (activeGame === 'snake') {
+    return (
+      <Snake onExit={() => setActiveGame(null)} />
+    )
+  }
+  if (activeGame === 'tetris') {
+     return (
+      <Tetris onExit={() => setActiveGame(null)} />
+     )
   }
 
   return (
@@ -71,8 +84,11 @@ function App() {
                   Classic snake game with mobile controls.
                 </p>
 
-                <button type="button">
-                  COMING SOON →
+                <button
+                  type="button"
+                  onClick={() => setActiveGame('snake')}
+                >
+                  PLAY NOW →
                 </button>
               </div>
             </article>
@@ -90,8 +106,8 @@ function App() {
                   Arrange the blocks and beat your high score.
                 </p>
 
-                <button type="button">
-                  COMING SOON
+                <button type="button" onClick={() => setActiveGame('tetris')}>
+                  PLAY NOW →
                 </button>
               </div>
             </article>
@@ -111,7 +127,7 @@ function App() {
 
                 <button
                   type="button"
-                  onClick={() => setShowShooter(true)}
+                  onClick={() => setActiveGame('shooter')}
                 >
                   PLAY NOW →
                 </button>
