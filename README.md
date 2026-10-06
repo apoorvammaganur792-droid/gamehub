@@ -53,6 +53,7 @@ A card-matching puzzle game where you test your memory and find matching pairs.
 
 ## 📁 Project Structure
 
+```text
 gamehub/
 ├── src/
 │   ├── games/
@@ -60,7 +61,7 @@ gamehub/
 │   │   ├── Memory/
 │   │   ├── Snake/
 │   │   └── Tetris/
-│   │
+│
 │   ├── App.jsx
 │   ├── App.css
 │   └── main.jsx
@@ -69,7 +70,7 @@ gamehub/
 ├── package.json
 ├── vite.config.js
 └── README.md
-
+```
 
 ## 💻 Run Locally
 
