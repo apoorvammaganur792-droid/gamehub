@@ -3,7 +3,7 @@ import './App.css'
 import DarkShooter from './games/DarkShooter/DarkShooter'
 import Snake from './games/Snake/Snake'
 import Tetris from './games/Tetris/Tetris'
-
+import Memory from './games/Memory/Memory'
 function App() {
   const [activeGame, setActiveGame] = useState(null)
 
@@ -22,6 +22,11 @@ function App() {
      return (
       <Tetris onExit={() => setActiveGame(null)} />
      )
+  }
+  if (activeGame === 'memory') {
+    return (
+       <Memory onExit={() => setActiveGame(null)} />
+    )
   }
 
   return (
@@ -147,8 +152,8 @@ function App() {
                   Test your memory and find matching cards.
                 </p>
 
-                <button type="button">
-                  COMING SOON
+                <button type="button" onClick = {() => setActiveGame('memory')}>
+                  PLAY NOW →
                 </button>
               </div>
             </article>
@@ -165,5 +170,4 @@ function App() {
     </div>
   )
 }
-
 export default App

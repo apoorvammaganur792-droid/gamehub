@@ -1,0 +1,291 @@
+.memory-game {
+min-height: 100vh;
+background:
+radial-gradient(circle at top, rgba(112, 11, 151, 0.2), transparent 35%),
+#070707;
+color: #ffffff;
+padding: 24px;
+font-family: Arial, sans-serif;
+}
+
+.memory-header {
+width: min(1100px, 100%);
+margin: 0 auto 30px;
+display: grid;
+grid-template-columns: 1fr auto 1fr;
+align-items: center;
+gap: 20px;
+}
+
+.memory-header > button {
+justify-self: start;
+padding: 10px 18px;
+border: 1px solid #700b97;
+background: transparent;
+color: #ffffff;
+cursor: pointer;
+font-weight: 700;
+letter-spacing: 1px;
+}
+
+.memory-header > button:hover {
+background: #700b97;
+}
+
+.memory-title {
+text-align: center;
+}
+
+.memory-title span {
+color: #9d38c1;
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 4px;
+}
+
+.memory-title h1 {
+margin: 5px 0 0;
+font-size: 34px;
+letter-spacing: 5px;
+}
+
+.memory-stats {
+justify-self: end;
+display: flex;
+gap: 24px;
+}
+
+.memory-stats div {
+min-width: 80px;
+text-align: center;
+padding: 10px 14px;
+border: 1px solid #262626;
+background: rgba(255, 255, 255, 0.03);
+}
+
+.memory-stats span {
+display: block;
+color: #888888;
+font-size: 10px;
+letter-spacing: 2px;
+margin-bottom: 5px;
+}
+
+.memory-stats strong {
+color: #ffffff;
+font-size: 20px;
+}
+
+.memory-main {
+width: min(900px, 100%);
+margin: 0 auto;
+}
+
+.memory-board {
+position: relative;
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 16px;
+padding: 22px;
+border: 1px solid #292929;
+background: rgba(255, 255, 255, 0.02);
+}
+
+.memory-card {
+position: relative;
+aspect-ratio: 1;
+padding: 0;
+border: 1px solid #333333;
+background: #101010;
+color: #ffffff;
+cursor: pointer;
+overflow: hidden;
+perspective: 1000px;
+}
+
+.card-front,
+.card-back {
+position: absolute;
+inset: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+backface-visibility: hidden;
+-webkit-backface-visibility: hidden;
+transition: transform 0.4s ease;
+}
+
+.card-front {
+background:
+linear-gradient(
+135deg,
+rgba(112, 11, 151, 0.2),
+transparent 50%
+),
+#111111;
+color: #700b97;
+font-size: clamp(28px, 5vw, 48px);
+font-weight: 900;
+transform: rotateY(0deg);
+}
+
+.card-back {
+background:
+radial-gradient(
+circle,
+rgba(112, 11, 151, 0.3),
+transparent 65%
+),
+#151515;
+color: #ffffff;
+font-size: clamp(28px, 5vw, 48px);
+text-shadow: 0 0 15px rgba(185, 93, 221, 0.8);
+transform: rotateY(180deg);
+}
+
+.memory-card.flipped .card-front,
+.memory-card.matched .card-front {
+transform: rotateY(180deg);
+}
+
+.memory-card.flipped .card-back,
+.memory-card.matched .card-back {
+transform: rotateY(0deg);
+}
+
+.memory-card:hover {
+border-color: #700b97;
+box-shadow: 0 0 18px rgba(112, 11, 151, 0.35);
+}
+
+.memory-card.matched {
+border-color: #b95ddd;
+box-shadow: 0 0 20px rgba(112, 11, 151, 0.55);
+cursor: default;
+}
+
+.memory-game-over {
+position: absolute;
+inset: 0;
+z-index: 10;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+background: rgba(7, 7, 7, 0.94);
+border: 2px solid #700b97;
+}
+
+.memory-game-over h2 {
+margin: 0;
+color: #ffffff;
+font-size: clamp(34px, 7vw, 58px);
+letter-spacing: 5px;
+}
+
+.memory-game-over p {
+margin: 12px 0 24px;
+color: #aaaaaa;
+letter-spacing: 2px;
+font-size: 13px;
+}
+
+.memory-game-over button,
+.memory-controls button {
+border: 1px solid #700b97;
+background: #700b97;
+color: #ffffff;
+padding: 12px 22px;
+font-weight: 700;
+letter-spacing: 1px;
+cursor: pointer;
+}
+
+.memory-game-over button:hover,
+.memory-controls button:hover {
+background: #8d18ba;
+}
+
+.memory-controls {
+margin-top: 20px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+}
+
+.memory-controls p {
+margin: 0;
+color: #777777;
+font-size: 12px;
+letter-spacing: 2px;
+}
+
+.memory-controls button {
+background: transparent;
+}
+
+@media (max-width: 700px) {
+.memory-game {
+padding: 16px;
+}
+
+.memory-header {
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.memory-header > button {
+    justify-self: start;
+}
+
+.memory-title {
+    order: -1;
+}
+
+.memory-stats {
+    justify-self: center;
+}
+
+.memory-board {
+    gap: 10px;
+    padding: 12px;
+}
+
+.memory-controls {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+}
+
+.memory-controls button {
+    width: 100%;
+}
+
+}
+
+@media (max-width: 420px) {
+.memory-game {
+padding: 10px;
+}
+
+.memory-title h1 {
+    font-size: 27px;
+}
+
+.memory-stats {
+    gap: 10px;
+    width: 100%;
+}
+
+.memory-stats div {
+    flex: 1;
+}
+
+.memory-board {
+    gap: 7px;
+    padding: 8px;
+}
+
+}
